@@ -29,4 +29,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function recu():hasMany
+    {
+        return $this->hasMany(Recu::class);
+    }
 }
