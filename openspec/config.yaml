@@ -1,0 +1,38 @@
+schema: spec-driven
+
+context: >
+  Assistant Dépenses - Application Laravel permettant à un commerçant
+  de coller le texte brut d'un reçu fournisseur et d'obtenir
+  automatiquement une liste structurée de dépenses via l'IA.
+
+rules:
+  proposal:
+    - Expliquer le problème métier réel.
+    - Justifier chaque décision d'architecture.
+    - Identifier les cas limites.
+    - Définir clairement le hors scope.
+    - Toujours partir des User Stories.
+
+  specs:
+    - Utiliser Given / When / Then.
+    - Décrire les comportements observables.
+    - Définir les critères d'acceptation.
+    - Référencer les User Stories concernées.
+    - Inclure les contraintes techniques associées.
+
+  design:
+    - Justifier l'utilisation des Queues.
+    - Justifier l'utilisation du Structured Output.
+    - Décrire les modèles Eloquent.
+    - Décrire les relations.
+    - Décrire les Enums.
+    - Décrire les Services et Jobs impliqués.
+    - Vérifier l'absence de N+1.
+
+  tasks:
+    - Générer des tâches atomiques.
+    - Respecter l'ordre logique d'implémentation.
+    - Inclure les tests Pest.
+    - Inclure les Policies.
+    - Inclure les Form Requests.
+    - Inclure la vérification Debugbar.

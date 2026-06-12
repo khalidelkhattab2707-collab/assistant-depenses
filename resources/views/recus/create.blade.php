@@ -5,7 +5,7 @@
         <h2 class="mb-4">Soumettre un reçu</h2>
         <div class="card">
             <div class="card-body">
-                <form method="POST" action="{{ route('recus.store') }}">
+                <form method="POST" action="{{ route('recus.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label fw-medium">Texte du reçu fournisseur</label>
@@ -14,6 +14,15 @@
                             placeholder="Collez ici le texte du reçu (darija, français, abréviations...)..."
                         >{{ old('text_brut') }}</textarea>
                         @error('text_brut')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Image du reçu (optionnelle)</label>
+                        <input type="file" name="image"
+                            class="form-control @error('image') is-invalid @enderror"
+                            accept="image/jpeg,image/png,image/webp">
+                        @error('image')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
