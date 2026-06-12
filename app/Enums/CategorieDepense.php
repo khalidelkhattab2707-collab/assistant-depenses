@@ -17,4 +17,8 @@ enum CategorieDepense: string {
             self::Autre       => 'Autre',
         };
     }
+
+    public static function values(): array {
+        return array_column(self::cases(), 'value');
+    }
 }

@@ -1,82 +1,74 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\StoreRecuRequest;
 use App\Models\Recu;
-use App\Enums\StatutRecu;
+use App\Services\RecuService;
 use Illuminate\Http\Request;
 
 class RecuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-             $recus = auth()->user()->recus()
-            ->with('depenses')->latest()->get();
+        $recus = auth()->user()->recus()
+            ->with('depenses')->latest()->paginate(20);
+
         return view('recus.index', compact('recus'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('recus.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRecuRequest $request)
+    public function store(StoreRecuRequest $request, RecuService $service)
     {
+        $service->create(auth()->user(), $request->validated());
 
-   
-        $validated = $request->validated();
-
-        $validated['user_id']=auth()->id();
-        $validated['status']= StatutRecu::EnAttente;
-        
-        Recu::create($validated);
-       
-         return redirect()->route('recus.index');
+        return redirect()->route('recus.index')
+            ->with('success', 'Reçu en cours de traitement.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Recu $recu)
-
     {
         $this->authorize('view', $recu);
-        return view('recus.show',compact('recu'));
+
+        $recu->load('depenses');
+
+        return view('recus.show', compact('recu'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Recu $recu)
     {
         $this->authorize('update', $recu);
-        return view('recu.edit',compact('recu'));
+
+        return view('recus.edit', compact('recu'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Recu $recu)
     {
-        //
+        $this->authorize('update', $recu);
+
+        $validated = $request->validate([
+            'text_brut' => ['required', 'string', 'min:10', 'max:10000'],
+            'status' => ['required', 'string', 'in:en_attente,traite,echoue'],
+            'devis' => ['nullable', 'string', 'in:MAD,EUR,USD'],
+            'total_estime' => ['nullable', 'numeric', 'min:0'],
+        ]);
+
+        $recu->update($validated);
+
+        return redirect()->route('recus.index')
+            ->with('success', 'Reçu mis à jour.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Recu $recu)
     {
         $this->authorize('delete', $recu);
         $recu->delete();
-        return redirect()->route('recu.index');
+
+        return redirect()->route('recus.index')
+            ->with('success', 'Reçu supprimé.');
     }
 }

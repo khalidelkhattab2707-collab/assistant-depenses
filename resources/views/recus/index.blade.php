@@ -15,14 +15,9 @@
     @foreach($recus as $recu)
     <tr>
         <td>{{ $recu->created_at->format('d/m/Y H:i') }}</td>
-        <td>{{ Str::limit($recu->texte_brut, 50) }}</td>
+        <td>{{ Str::limit($recu->text_brut, 50) }}</td>
         <td>
-            @php $color = match($recu->statut) {
-                \App\Enums\StatutRecu::Traite  => 'success',
-                \App\Enums\StatutRecu::Echoue  => 'danger',
-                default => 'warning'
-            }; @endphp
-            <span class="badge bg-{{ $color }}">{{ $recu->status->label() }}</span>
+            <span class="badge bg-{{ $recu->status->color() }}">{{ $recu->status->label() }}</span>
         </td>
         <td>{{ $recu->depenses->count() }}</td>
         <td class="d-flex gap-1">
@@ -40,4 +35,5 @@
     </tbody>
 </table>
 @endif
+{{ $recus->links() }}
 @endsection
